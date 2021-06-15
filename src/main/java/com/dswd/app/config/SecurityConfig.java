@@ -1,6 +1,6 @@
 package com.dswd.app.config;
 
-import com.dswd.app.service.CustomUserService;
+import com.dswd.app.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomUserService userService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -27,9 +28,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/registration**",
+                        "/login**",
+                        "/logout**",
                         "/js",
                         "/css",
                         "/img/**",
+                        "/templates/**",
                         "/webjars/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -52,9 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userService);
+        authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }

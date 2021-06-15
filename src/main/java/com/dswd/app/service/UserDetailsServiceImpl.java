@@ -14,13 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Service
-public class UserServiceImpl implements CustomUserService {
+public class UserDetailsServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -31,17 +32,19 @@ public class UserServiceImpl implements CustomUserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
+    @Override
     public User save(UserRegistrationDTO registration) {
         User user = User.builder()
                 .firstName(registration.getFirstName())
                 .lastName(registration.getLastName())
                 .email(registration.getEmail())
                 .password(passwordEncoder.encode(registration.getPassword()))
-                .roles(Collections.singletonList(Role.builder()
+                .roles(Collections.singleton(Role.builder()
                         .name("ROLE_USER").build()))
                 .build();
 

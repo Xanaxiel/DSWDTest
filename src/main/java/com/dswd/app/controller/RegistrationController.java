@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import com.dswd.app.http.UserRegistrationDTO;
 import com.dswd.app.model.User;
-import com.dswd.app.service.CustomUserService;
+import com.dswd.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    private final CustomUserService userService;
+    private final UserService userService;
 
     @ModelAttribute("user")
     public UserRegistrationDTO userRegistrationDto() {
